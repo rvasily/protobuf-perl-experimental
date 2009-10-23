@@ -1,0 +1,6 @@
+- Message base class knows how to encode and decode the basic wire types
+- repeated fields are arrays
+- Generated code is fairly simple
+  - messages are blessed array refs
+  - field id in proto file is index in $self array
+  - getters and setters
