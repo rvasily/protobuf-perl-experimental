@@ -27,8 +27,11 @@ use Data::Dumper;
 my $scalar = '';
 my $handle = IO::Scalar->new(\$scalar);
 
-write_tag($handle, 10, WIRE_TYPE_VARINT);
-print 'scalar: ' . unpack('B*', $scalar) . "\n";
-$handle->seek(0,0);
+use Benchmark;
+my $write = timeit(10000, sub { write_tag($handle, 10, WIRE_TYPE_VARINT); }, 'write_tag');
+my $read = timeit(10000, sub { read_tag($handle); }, 'read_tag');
 
-use Data::Dumper; die Dumper([ read_tag($handle) ]);
+print STDERR timestr($write);
+print STDERR timestr($read);
+
+
