@@ -3,12 +3,14 @@ package WireFormat;
 use strict;
 
 use base 'Exporter';
-our @EXPORT_OK;
+our (@EXPORT_OK, %EXPORT_TAGS);
 
 BEGIN {
     push @EXPORT_OK, qw/
         read_varint
         write_varint
+        read_tag
+        write_tag
         WIRE_TYPE_VARINT
         WIRE_TYPE_64BIT
         WIRE_TYPE_LENGTH_DELIM
@@ -16,6 +18,10 @@ BEGIN {
         WIRE_TYPE_END_GROUP
         WIRE_TYPE_32BIT
     /;
+
+    %EXPORT_TAGS = (
+        all => [@EXPORT_OK]
+    );
 }
 
 use constant WIRE_TYPE_VARINT       => 0;
@@ -57,6 +63,23 @@ sub read_varint
     } while ($buf & 0x80);
 
     return $result;
+}
+
+sub write_tag
+{
+    my ($handle, $field_number, $wire_type) = @_;
+    return write_varint($handle, ($field_number << 3) | $wire_type);
+}
+
+sub read_tag
+{
+    my $wire_type_mask = (0b00000001 << 3) - 1;
+
+    my $handle = shift;
+    my $tag = read_varint($handle);
+    my $wire_type = $tag & $wire_type_mask;
+    my $field_number = $tag >> 3;
+    return ($field_number, $wire_type);
 }
 
 1;
