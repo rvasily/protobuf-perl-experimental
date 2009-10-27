@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 
 use strict;
-use Test::More tests => 8;
+use Test::More tests => 10;
 use lib '..';
 use WireFormat qw/ :all /;
 use IO::Scalar;
@@ -30,6 +30,12 @@ write_tag($handle, 1, 0);
 is( unpack('B*', $output), '00001000', 'write very simple tag');
 $handle->seek(0, 0);
 is_deeply( [ read_tag($handle) ], [1, 0], 'read very simple tag');
+
+rewind();
+write_tag($handle, 10, 1);
+is( unpack('B*', $output), '01010001', 'write very simple tag');
+$handle->seek(0, 0);
+is_deeply( [ read_tag($handle) ], [10, 1], 'read very simple tag');
 
 rewind();
 write_tag($handle, 300, 5);

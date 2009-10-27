@@ -62,7 +62,7 @@ sub read_varint
         $count++;
     } while ($buf & 0x80);
 
-    return $result;
+    return ($result, $count);
 }
 
 sub write_tag
@@ -76,10 +76,10 @@ sub read_tag
     my $wire_type_mask = (0b00000001 << 3) - 1;
 
     my $handle = shift;
-    my $tag = read_varint($handle);
+    my ($tag, $num_bytes_read) = read_varint($handle);
     my $wire_type = $tag & $wire_type_mask;
     my $field_number = $tag >> 3;
-    return ($field_number, $wire_type);
+    return ($field_number, $wire_type, $num_bytes_read);
 }
 
 1;
