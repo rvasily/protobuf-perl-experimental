@@ -1,0 +1,5 @@
+* figure out nested messages (for reading)
+** if it's a subclass of Message, pass the handle to that message's parse_from_handle method and then populate the slot with the result
+** if it's a repeated something, slot is an array ref. support a subset of methods on methodmaker lists (push, pop, set, get, delete, count
+* for writing
+** create an empty buffer and an IO::Scalar wrapper. pass the wrapper to the contained message, write_delimited() the result.
