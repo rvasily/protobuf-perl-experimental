@@ -2,7 +2,7 @@
 
 use strict;
 use lib '.';
-use WireFormat qw/ read_varint write_varint read_tag write_tag WIRE_TYPE_VARINT /;
+use WireFormat qw/ :all /;
 
 use IO::Scalar;
 use Data::Dumper;
